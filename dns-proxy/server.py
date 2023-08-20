@@ -9,12 +9,12 @@ def ssl_wrap(server_addr: str, server_port: int, data: bytes)->bytes:
 
   server = (server_addr, server_port)
 
-  context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
+  context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
   context.load_verify_locations('/etc/ssl/cert.pem')
   context.check_hostname = True
   
   with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-    with context.wrap_socket(sock=sock,server_hostname="1.1.1.1") as ssock:
+    with context.wrap_socket(sock=sock,server_hostname=server_addr) as ssock:
       ssock.connect(server)
       ssock.send(data)
       data = ssock.recv(BUFFER_SIZE)
