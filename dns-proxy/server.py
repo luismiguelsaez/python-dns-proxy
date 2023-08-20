@@ -12,6 +12,7 @@ def ssl_wrap(server_addr: str, server_port: int, data: bytes)->bytes:
   context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
   context.load_verify_locations('/etc/ssl/cert.pem')
   context.check_hostname = True
+  context.minimum_version = ssl.TLSVersion.TLSv1_3
   
   with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
     with context.wrap_socket(sock=sock,server_hostname=server_addr) as ssock:
