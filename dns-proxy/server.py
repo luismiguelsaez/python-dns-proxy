@@ -3,16 +3,16 @@ from select import select
 from threading import Thread
 import logging
 from sys import stdout
-import ssl
+from ssl import SSLContext, PROTOCOL_TLS_CLIENT, TLSVersion
 
 def ssl_wrap(server_addr: str, server_port: int, data: bytes)->bytes:
 
   server = (server_addr, server_port)
 
-  context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+  context = SSLContext(PROTOCOL_TLS_CLIENT)
   context.load_verify_locations('/etc/ssl/cert.pem')
   context.check_hostname = True
-  context.minimum_version = ssl.TLSVersion.TLSv1_3
+  context.minimum_version = TLSVersion.TLSv1_3
   
   with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
     with context.wrap_socket(sock=sock,server_hostname=server_addr) as ssock:
